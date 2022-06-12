@@ -4,285 +4,112 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWorkZoo
+namespace HomeWorkZoo3
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
             Zoo zoo = new Zoo();
-            Console.CursorVisible = false;
+            string userInput = "";
 
-            while (true)
+            while (userInput != "2")
             {
-                Console.SetCursorPosition(35, 10);
-                Console.WriteLine("Виртуальная карта нашего зоопарка.");
-                zoo.ShowMap(zoo.Map, zoo.UserX, zoo.UserY);
-                zoo.MoveUser(zoo.Map, ref zoo.UserX, ref zoo.UserY);
-                zoo.ShowInfo(zoo.Map, zoo.UserX, zoo.UserY);
+                Console.WriteLine("1 - Информация о вольерах, 2 - Выйти из программы.");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        zoo.ShowInfo();
+                        break;
+
+                        case "2":
+                        Console.WriteLine("Закрытие приложения");
+                        break;
+
+                        default:
+                        Console.WriteLine("Не верный ввод");
+                        break;
+                }
             }
+
+            Console.ReadLine();
         }
     }
 
     class Zoo
     {
-        private char[,] map = {
-                {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#' },
-                {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#' },
-                {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#' },
-                {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#','#','#','#','#','#','#','#' },
-                {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','&',' ',' ',' ',' ',' ','#' },
-                {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#' },
-                {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#' },
-                {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#' },
-                {'#',' ','!',' ',' ',' ',' ',' ',' ',' ','$',' ',' ',' ',' ',' ',' ',' ',' ',' ','%',' ','#' },
-                {'#','#','#','#','#',' ',' ',' ','#','#','#','#','#','#',' ',' ',' ',' ','#','#','#','#','#' },
-                {'#',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ','#' },
-                {'#',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ','#' },
-                {'#',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ','#' },
-                {'#',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ','#' },
-                {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#' }
-            };
+        private List<Aviary> _aviaries = new List<Aviary>();
 
-        public char[,] Map => map;
-        public int UserX = 1;
-        public int UserY = 1;
-
-        public void ShowMap(char[,] map, int x, int y)
+        public Zoo()
         {
-            Console.SetCursorPosition(0, 0);
+            CreativeAviary();
+        }
 
-            for (int i = 0; i < map.GetLength(0); i++)
+        public void ShowInfo()
+        {         
+            Console.WriteLine($"Общее количесвто вольеров {_aviaries.Count}, информация о котором нужна?");
+            string userInput = Console.ReadLine();
+            if (int.TryParse(userInput, out int Value))
             {
-
-                for (int j = 0; j < map.GetLength(1); j++)
+                if (Value <= _aviaries.Count && Value != 0)
                 {
-                    Console.Write(map[i, j]);
+                    Aviary aviary = _aviaries[Value - 1];
+                    aviary.ShowInfo(aviary);
                 }
 
-                Console.WriteLine();
+                Console.WriteLine("Вольера с таким номером нету.");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка ввода");
             }
 
-            Console.SetCursorPosition(y, x);
-            Console.Write('@');
         }
 
-        public void MoveUser(char[,] map, ref int userX, ref int userY)
+        private void CreativeAviary()
         {
-            ConsoleKeyInfo userInput = Console.ReadKey();
+            _aviaries.Add(new Aviary(1, 3, new Animal("Слон", "Тромбит")));
+            _aviaries.Add(new Aviary(1, 2, new Animal("Бегемот", "Фырчит")));
+            _aviaries.Add(new Aviary(5, 3, new Animal("Горила", "Ууууууу")));
+            _aviaries.Add(new Aviary(1, 10,new Animal("Лев", "Рычит Ррррр")));
+            _aviaries.Add(new Aviary(1, 0, new Animal("Медведь", "Рычит Уаааррррр")));
+        }
+    }
 
-            switch (userInput.Key)
-            {
-                case ConsoleKey.UpArrow:
+    class Aviary
+    {      
+        public int NumberMale { get; private set; }
+        public int NumberFemale { get; private set; }
+        public Animal Animal { get; private set; }
 
-                    if (map[userX - 1, userY] != '#')
-                    {
-                        userX--;
-                    }
-
-                    break;
-
-                case ConsoleKey.DownArrow:
-
-                    if (map[userX + 1, userY] != '#')
-                    {
-                        userX++;
-                    }
-
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    if (map[userX, userY - 1] != '#')
-                    {
-                        userY--;
-                    }
-
-                    break;
-
-                case ConsoleKey.RightArrow:
-
-                    if (map[userX, userY + 1] != '#')
-                    {
-                        userY++;
-                    }
-
-                    break;
-            }
+        public Aviary(int numberMale, int numberFemale, Animal animal)
+        {
+            NumberMale = numberMale;
+            NumberFemale = numberFemale;
+            Animal = animal;
         }
 
-        public void ShowInfo(char[,] map, int userX, int userY)
+        public void ShowInfo(Aviary aviary)
         {
-            if (map[userX, userY] == ' ')
-            {
-                Console.Clear();
-            }
-
-            if (map[userX, userY] == '!')
-            {
-                Animal animalBear = new Bear();
-            }
-
-            if (map[userX, userY] == '$')
-            {
-                Animal animalLion = new Lion();
-            }
-
-            if (map[userX, userY] == '%')
-            {
-                Animal animalElephant = new Elephant();
-            }
-
-            if (map[userX, userY] == '&')
-            {
-                Animal animalTiger = new Tiger();
-            }          
+            Console.WriteLine($"Инфорция о вольере" +
+                $"\nЖивотные          :{aviary.Animal.Name}" +
+                $"\nИздают звуки      :{aviary.Animal.Voice}" +
+                $"\nКоличество самцов :{aviary.NumberMale}" +
+                $"\nКоличесвто самок  :{aviary.NumberFemale}");
         }
     }
 
     class Animal
     {
-        protected string _name;
-        protected int _number;
-        private string _genderFemale = "самка";
-        private string _genderMale = "самец";
+        public string Name { get; private set; }
+        public string Voice { get; private set; }
 
-        public Animal()
+        public Animal(string name, string voice)
         {
-            SetName();
-            SetNumber();
-            ShowName();
-            ShowInfoNumber();
-            ReproductionVoice();
-            ShowInfoGender();
-        }
-
-        public void ShowName()
-        {
-            Console.SetCursorPosition(35, 0);
-            Console.WriteLine($"Информация о вольере с животными {_name} ");
-        }
-
-        public void ShowInfoNumber()
-        {
-            Console.SetCursorPosition(35, 2);
-            Console.WriteLine($"Общее количество животных {_number}");
-        }
-
-        public void ShowInfoGender()
-        {
-            int pair = 2;
-            int numberFemale;
-            int numberMale = 1;
-            Console.SetCursorPosition(35, 3);
-
-            if (_number == pair)
-            {               
-                Console.WriteLine($"Тут живет пара {_genderMale}  и {_genderFemale}");
-            }
-
-            if (_number < pair && _number > 0)
-            {
-                Console.WriteLine($"Тут проживает одинокий {_genderMale}");
-            }
-
-            if (_number > pair)
-            {
-                numberFemale = _number - numberMale;
-                Console.WriteLine($"Тут проживает {_genderMale} и {numberFemale} {_genderFemale}.");
-            }
-        }
-
-        public virtual void SetName()
-        {
-            _name = "Пустой";
-        }
-
-
-        public virtual void SetNumber()
-        {
-            
-        }
-
-        public virtual void ReproductionVoice()
-        {
-
-        }    
-    }
-
-    class Bear : Animal
-    {
- 
-        public override void ReproductionVoice()
-        {
-            Console.SetCursorPosition(35, 1);
-            Console.WriteLine("Уаукауаауу - рык медведя !");
-        }
-
-        public override void SetName()
-        {
-           _name = "медведи";
-        }
-
-        public override void SetNumber()
-        {
-            _number = 5;
-        }
-    }
-
-    class Lion : Animal
-    {
-        public override void ReproductionVoice()
-        {
-            Console.SetCursorPosition(35, 1);
-            Console.WriteLine("РРРРРРРР - рычат львы!");
-        }
-
-        public override void SetName()
-        {
-            _name = "львы";
-        }
-
-        public override void SetNumber()
-        {
-            _number = 3;
-        }
-    }
-
-    class Elephant : Animal
-    {
-        public override void ReproductionVoice()
-        {
-            Console.SetCursorPosition(35, 1);
-            Console.WriteLine("Тууу ттттууу  - тромбят слоны");
-        }
-
-        public override void SetName()
-        {
-            _name = "слоны";
-        }
-
-        public override void SetNumber()
-        {
-            _number = 2;
-        }
-    }
-
-    class Tiger : Animal
-    {
-        public override void ReproductionVoice()
-        {
-            Console.SetCursorPosition(35, 1);
-            Console.WriteLine("Рув рув рав  - голос тигра");
-        }
-
-        public override void SetName()
-        {
-            _name = "тигры";
-        }
-
-        public override void SetNumber()
-        {
-            _number = 1;
+            Name = name;
+            Voice = voice;
         }
     }
 }
