@@ -12,8 +12,9 @@ namespace HomeWorkZoo3
         {
             Zoo zoo = new Zoo();
             string userInput = "";
+            bool isWork = true;
 
-            while (userInput != "2")
+            while (isWork)
             {
                 Console.WriteLine("1 - Информация о вольерах, 2 - Выйти из программы.");
                 userInput = Console.ReadLine();
@@ -21,11 +22,11 @@ namespace HomeWorkZoo3
                 switch (userInput)
                 {
                     case "1":
-                        zoo.ShowInfo();
+                        zoo.ChoiceAviary();
                         break;
 
                         case "2":
-                        Console.WriteLine("Закрытие приложения");
+                        isWork = false;
                         break;
 
                         default:
@@ -44,31 +45,32 @@ namespace HomeWorkZoo3
 
         public Zoo()
         {
-            CreativeAviary();
+            CreationAviaries();
         }
 
-        public void ShowInfo()
+        public void ChoiceAviary()
         {         
             Console.WriteLine($"Общее количесвто вольеров {_aviaries.Count}, информация о котором нужна?");
             string userInput = Console.ReadLine();
-            if (int.TryParse(userInput, out int Value))
+            if (int.TryParse(userInput, out int index))
             {
-                if (Value <= _aviaries.Count && Value != 0)
+                if (index <= _aviaries.Count && index != 0)
                 {
-                    Aviary aviary = _aviaries[Value - 1];
-                    aviary.ShowInfo(aviary);
+                    Aviary aviary = _aviaries[index - 1];
+                    aviary.ShowInfo(/*aviary*/);
                 }
-
-                Console.WriteLine("Вольера с таким номером нету.");
+                else
+                {
+                    Console.WriteLine("Вольера с таким номером нету.");
+                }                
             }
             else
             {
                 Console.WriteLine("Ошибка ввода");
             }
-
         }
 
-        private void CreativeAviary()
+        private void CreationAviaries()
         {
             _aviaries.Add(new Aviary(1, 3, new Animal("Слон", "Тромбит")));
             _aviaries.Add(new Aviary(1, 2, new Animal("Бегемот", "Фырчит")));
@@ -91,13 +93,13 @@ namespace HomeWorkZoo3
             Animal = animal;
         }
 
-        public void ShowInfo(Aviary aviary)
+        public void ShowInfo()
         {
             Console.WriteLine($"Инфорция о вольере" +
-                $"\nЖивотные          :{aviary.Animal.Name}" +
-                $"\nИздают звуки      :{aviary.Animal.Voice}" +
-                $"\nКоличество самцов :{aviary.NumberMale}" +
-                $"\nКоличесвто самок  :{aviary.NumberFemale}");
+                $"\nЖивотные          :{Animal.Name}" +
+                $"\nИздают звуки      :{Animal.Voice}" +
+                $"\nКоличество самцов :{NumberMale}" +
+                $"\nКоличесвто самок  :{NumberFemale}");
         }
     }
 
