@@ -25,11 +25,11 @@ namespace HomeWorkZoo3
                         zoo.ChoiceAviary();
                         break;
 
-                        case "2":
+                    case "2":
                         isWork = false;
                         break;
 
-                        default:
+                    default:
                         Console.WriteLine("Не верный ввод");
                         break;
                 }
@@ -45,11 +45,11 @@ namespace HomeWorkZoo3
 
         public Zoo()
         {
-            CreationAviaries();
+            CreateAviaries();
         }
 
         public void ChoiceAviary()
-        {         
+        {
             Console.WriteLine($"Общее количесвто вольеров {_aviaries.Count}, информация о котором нужна?");
             string userInput = Console.ReadLine();
             if (int.TryParse(userInput, out int index))
@@ -57,12 +57,12 @@ namespace HomeWorkZoo3
                 if (index <= _aviaries.Count && index != 0)
                 {
                     Aviary aviary = _aviaries[index - 1];
-                    aviary.ShowInfo(/*aviary*/);
+                    aviary.ShowInfo();
                 }
                 else
                 {
                     Console.WriteLine("Вольера с таким номером нету.");
-                }                
+                }
             }
             else
             {
@@ -70,18 +70,18 @@ namespace HomeWorkZoo3
             }
         }
 
-        private void CreationAviaries()
+        private void CreateAviaries()
         {
             _aviaries.Add(new Aviary(1, 3, new Animal("Слон", "Тромбит")));
             _aviaries.Add(new Aviary(1, 2, new Animal("Бегемот", "Фырчит")));
             _aviaries.Add(new Aviary(5, 3, new Animal("Горила", "Ууууууу")));
-            _aviaries.Add(new Aviary(1, 10,new Animal("Лев", "Рычит Ррррр")));
+            _aviaries.Add(new Aviary(1, 10, new Animal("Лев", "Рычит Ррррр")));
             _aviaries.Add(new Aviary(1, 0, new Animal("Медведь", "Рычит Уаааррррр")));
         }
     }
 
     class Aviary
-    {      
+    {
         public int NumberMale { get; private set; }
         public int NumberFemale { get; private set; }
         public Animal Animal { get; private set; }
